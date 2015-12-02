@@ -41,7 +41,7 @@ function processMessage($message,$update) {
 		}
 
 		if(strpos($text, "/miami")===0){
-			reply_message("SE DICE MAIAMEEEE MI AMOR!");
+			reply_message($message, "SE DICE MAIAMEEEE MI AMOR!");
 		}
 	} else { // NO ES UN COMANDO
 		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
