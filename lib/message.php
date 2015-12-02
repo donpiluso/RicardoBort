@@ -34,6 +34,7 @@ function get_random_message($sourceFile, $fallback = "Error") {
 function processMessage($message,$update) {
 	$text = $message['text'];
 	$nombre_saludo = $message["from"]["first_name"];
+	$errMsg = "Algo Salió mal ".$nombre_saludo;
 
 	//ES UN COMANDO O NO
 	if(strpos($text, "/") === 0){
@@ -45,11 +46,11 @@ function processMessage($message,$update) {
 		newlog($command); // ONLY FOR DEBUG
 		
 		if(strpos($text, "/ilumina")===0){
-			reply_message($message, get_random_message('feed', "Algo Salió mal ".$nombre_saludo));
+			reply_message($message, get_random_message('feed', $errMsg));
 		}
 
 		if(strpos($text, "/miami")===0){
-			reply_message($message, "SE DICE MAIAMEEEE MI AMOR!");
+			reply_message($message, get_random_message('miami', $errMsg));
 		}
 	} else { // NO ES UN COMANDO
 		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
