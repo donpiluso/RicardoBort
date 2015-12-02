@@ -4,7 +4,7 @@
 	FUNCION PARA PROCESAR EL MENSAJE RECIBIDO
 */
 
-function log($command) {
+function newlog($command) {
 	$fh = fopen("log.txt", 'a') or die("can't open file");
 	$stringData = json_encode($command).chr(10);
 	fwrite($fh, $stringData);
@@ -34,7 +34,7 @@ function processMessage($message,$update) {
 		$arrayText = explode(" ", $rawText);
 		$command = $arrayText[0];
 		
-		log($command); // ONLY FOR DEBUG
+		newlog($command); // ONLY FOR DEBUG
 		
 		if(strpos($text, "/ilumina")===0){
 			reply_message($message, get_random_message('feed', "Algo Salió mal ".$nombre_saludo));
