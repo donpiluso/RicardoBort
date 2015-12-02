@@ -46,6 +46,8 @@ function processMessage($message,$update) {
 	} else { // NO ES UN COMANDO
 		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
 			reply_message($message, "Hola " . $nombre_saludo);
+		}else{
+			reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
 		}
 	}
 }
