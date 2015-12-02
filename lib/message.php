@@ -13,13 +13,13 @@ function log($command) {
 function reply_message($replyTo, $text){
 	apiRequest("sendMessage", array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"], "text" => $text));
 }
-function get_random_message($sourceFile) {
+function get_random_message($sourceFile, $fallback = "Error") {
 	$frases=file("lib/$sourceFile.txt");
 	if(is_array($frases)) {
 		shuffle($frases);
 		return $frases[0];
 	} else {
-		return false;
+		return $fallback;
 	}
 }
 
@@ -37,7 +37,7 @@ function processMessage($message,$update) {
 		log($command); // ONLY FOR DEBUG
 		
 		if(strpos($text, "/ilumina")===0){
-			reply_message($message, get_random_message('feed') || ("Algo Salió mal ".$nombre_saludo));
+			reply_message($message, get_random_message('feed', "Algo Salió mal ".$nombre_saludo));
 		}
 
 		if(strpos($text, "/miami")===0){
