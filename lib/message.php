@@ -12,7 +12,7 @@ function newlog($command) {
 }
 function reply_message($replyTo, $text){
 	if(strpos($text, "{") === 0){
-		$array = json_decode($text);
+		$array = json_decode($text, true);
 		$type = $array["type"];
 		unset($array["type"]);
 	} else {
