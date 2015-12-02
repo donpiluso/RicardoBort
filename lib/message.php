@@ -11,7 +11,15 @@ function newlog($command) {
 	fclose($fh);
 }
 function reply_message($replyTo, $text){
-	apiRequest("sendMessage", array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"], "text" => $text));
+	if(strpos($text, "{") === 0){
+		$array = json_decode($text);
+		$type = $array["type"];
+		unset($array["type"]);
+	} else {
+		$array = array("text" => $text);
+		$type = "message";
+	}
+	apiRequest("send".$type, array_merge($array, array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"])));
 }
 function get_random_message($sourceFile, $fallback = "Error") {
 	$frases=file("lib/$sourceFile.txt");
@@ -26,6 +34,7 @@ function get_random_message($sourceFile, $fallback = "Error") {
 function processMessage($message,$update) {
 	$text = $message['text'];
 	$nombre_saludo = $message["from"]["first_name"];
+	$errMsg = "Algo Salió mal ".$nombre_saludo;
 
 	//ES UN COMANDO O NO
 	if(strpos($text, "/") === 0){
@@ -37,11 +46,11 @@ function processMessage($message,$update) {
 		newlog($command); // ONLY FOR DEBUG
 		
 		if(strpos($text, "/ilumina")===0){
-			reply_message($message, get_random_message('feed', "Algo Salió mal ".$nombre_saludo));
+			reply_message($message, get_random_message('feed', $errMsg));
 		}
 
 		if(strpos($text, "/miami")===0){
-			reply_message($message, "SE DICE MAIAMEEEE MI AMOR!");
+			reply_message($message, get_random_message('miami', $errMsg));
 		}
 	} else { // NO ES UN COMANDO
 		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
