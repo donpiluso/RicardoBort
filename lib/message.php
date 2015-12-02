@@ -11,7 +11,15 @@ function newlog($command) {
 	fclose($fh);
 }
 function reply_message($replyTo, $text){
-	apiRequest("sendMessage", array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"], "text" => $text));
+	if(strpos($text, "{") === 0){
+		$array = json_decode($text);
+		$type = $array["type"];
+		unset($array["type"]);
+	} else {
+		$array = array("text" => $text);
+		$type = "message";
+	}
+	apiRequest("send".$type, array_merge($array, array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"])));
 }
 function get_random_message($sourceFile, $fallback = "Error") {
 	$frases=file("lib/$sourceFile.txt");
