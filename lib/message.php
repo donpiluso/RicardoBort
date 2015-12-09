@@ -53,6 +53,18 @@ function processMessage($message,$update) {
 		if(strpos($text, "/miami")===0){
 			reply_message($message, get_random_message('miami', $errMsg));
 		}
+
+		if(strpos($text, "/bowling")===0){
+			
+			if(array_key_exists("1", $arrayText) && $arrayText[1]!=" "){
+				$respuesta="BASTA DE BOWLING A ".strtoupper($arrayText[1])." O LES MANDO A MI SEGUIRDAD";
+			}else{
+				$respuesta="BASTA DE BOWLING CHICOS! MAMAAAAAAAAAA!!!";
+			}
+
+			reply_message($message, $respuesta);
+		}
+
 	} else { // NO ES UN COMANDO
 		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
 			reply_message($message, "Hola " . $nombre_saludo);
