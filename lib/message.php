@@ -41,7 +41,7 @@ function processMessage($message,$update) {
 	if(strpos($text, "/") === 0){
 		$rawText = substr($text, 1);
 
-		$arrayText = explode(" ", $rawText);
+		$arrayText = array_filter(explode(" ", $rawText), 'strlen');
 		$command = $arrayText[0];
 		
 		newlog($command); // ONLY FOR DEBUG
@@ -55,9 +55,9 @@ function processMessage($message,$update) {
 		}
 
 		if(strpos($text, "/bowling")===0){
-			
-			if(array_key_exists("1", $arrayText) && $arrayText[1]!=" "){
-				$respuesta="BASTA DE BOWLING A ".strtoupper($arrayText[1])." O LES MANDO A MI SEGUIRDAD";
+			if(count($arrayText) > 1){
+				array_shift($arrayText);
+				$respuesta="BASTA DE BOWLING A ".strtoupper(implode(" ", $arrayText))." O LES MANDO A MI SEGUIRDAD";
 			}else{
 				$respuesta="BASTA DE BOWLING CHICOS! MAMAAAAAAAAAA!!!";
 			}
