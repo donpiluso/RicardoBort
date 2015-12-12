@@ -72,6 +72,8 @@ function processMessage($message,$update) {
 			reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
 		} elseif($message["new_chat_participant"]){
 			reply_message($message, 'HOLA '.strtoupper($message['new_chat_participant']['first_name'])." BIENVENIDO A MAIAMEEEE MI AMOR..\n\nESTE GRUPO ESTA EN LO MAS ALTO PORQUE ESTOY YO CON MI ROLLS ROYCE\nADEMAS SON TODOS UNOS GENIOS Y HACEN LOS MEJORES STICKERS\nSI SOS TREMENDO PUTO LOS JUEVES HAY PIJAS Y SINO TODOS LOS DIAS HAY TETAS\n\nOJALÁ LA VIDA TE SONRÍA COMO ME SONRÍE A MI Y PUEDAS DISFRUTAR LA VIDA COMO LO HAGO YO.BESO");
+		}elseif($message["left_chat_participant"] && $message["left_chat_participant"]['id'] == $message['from']['id']) {
+			reply_message($message, get_random_message('chau', "Algo Salió mal ".$nombre_saludo));
 		}
 	}
 }
