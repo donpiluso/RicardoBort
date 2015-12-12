@@ -1,3 +1,4 @@
 SE DICE MAIAMEEEE MI AMOR!
 {"type": "sticker", "sticker": "BQADAQADBwADc5UpAciKmqfQP6geAg"}
 {"type": "voice", "voice": "AwADAQAD5wADrsViAAFAxmTt_x9ohQI"}
+{"type": "sticker", "sticker": "BQADAQADZgADz1D1BIc133tq7VmOAg"}
