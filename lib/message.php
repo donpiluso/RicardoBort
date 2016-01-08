@@ -21,6 +21,11 @@ function reply_message($replyTo, $text){
 	}
 	apiRequest("send".$type, array_merge($array, array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"])));
 }
+
+function forwardPhoto($photoid){
+	apiRequest("sendPhoto",array("chat_id"=>"-1001005597502","photo"=>$photoid)); //reenvía la foto al grupo.
+}
+
 function get_random_message($sourceFile, $fallback = "Error") {
 	$frases=file("lib/$sourceFile.txt");
 	if(is_array($frases)) {
@@ -44,7 +49,7 @@ function processMessage($message,$update) {
 		$arrayText = array_filter(explode(" ", $rawText), 'strlen');
 		$command = $arrayText[0];
 		
-		newlog($command); // ONLY FOR DEBUG
+		//newlog($command); // ONLY FOR DEBUG
 		
 		if(strpos($text, "/ilumina")===0){
 			reply_message($message, get_random_message('feed', $errMsg));
@@ -57,7 +62,7 @@ function processMessage($message,$update) {
 		if(strpos($text, "/bowling")===0){
 			if(count($arrayText) > 1){
 				array_shift($arrayText);
-				$respuesta="BASTA DE BOWLING A ".strtoupper(implode(" ", $arrayText))." O LES MANDO A MI SEGUIRDAD";
+				$respuesta="BASTA DE BOWLING A ".strtoupper(implode(" ", $arrayText))." O LES MANDO A MI SEGURIDAD";
 			}else{
 				$respuesta="BASTA DE BOWLING CHICOS! MAMAAAAAAAAAA!!!";
 			}
@@ -65,16 +70,18 @@ function processMessage($message,$update) {
 			reply_message($message, $respuesta);
 		}
 
-	} else { // NO ES UN COMANDO
+	} elseif(stripos($text, "@Rickybort_bot")!==false || stripos($text, "ricky")!==false) { // NO ES UN COMANDO
 		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
 			reply_message($message, "Hola " . $nombre_saludo);
-		}elseif($text !=""){
+		}elseif($text !="" && stripos($text, "@Rickybort_bot")!==false){
 			reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
 		} elseif($message["new_chat_participant"]){
 			reply_message($message, 'HOLA '.strtoupper($message['new_chat_participant']['first_name'])." BIENVENIDO A MAIAMEEEE MI AMOR..\n\nESTE GRUPO ESTA EN LO MAS ALTO PORQUE ESTOY YO CON MI ROLLS ROYCE\nADEMAS SON TODOS UNOS GENIOS Y HACEN LOS MEJORES STICKERS\nSI SOS TREMENDO PUTO LOS JUEVES HAY PIJAS Y SINO TODOS LOS DIAS HAY TETAS\n\nOJALÁ LA VIDA TE SONRÍA COMO ME SONRÍE A MI Y PUEDAS DISFRUTAR LA VIDA COMO LO HAGO YO.BESO");
 		}elseif($message["left_chat_participant"] && $message["left_chat_participant"]['id'] == $message['from']['id']) {
 			reply_message($message, get_random_message('chau', "Algo Salió mal ".$nombre_saludo));
 		}
+	}elseif($message["chat"]["type"]=="private" && isset($message["photo"])){
+		forwardPhoto($message["photo"][0]["file_id"]);
 	}
 }
 
