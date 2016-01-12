@@ -105,7 +105,7 @@ function processMessage($message,$update) {
 		}//Cierra procesamiento de privados.
 
 		if($message["chat"]["type"]=="group" || $message["chat"]["type"]=="supergroup"){
-			if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
+			if(stripos($text, "hola bot") === 0 || $text == "hola" || stripos($text, "Hola comandante") === 0){
 			reply_message($message, "Hola " . $nombre_saludo);
 		
 			}elseif ($message["new_chat_participant"]) {
