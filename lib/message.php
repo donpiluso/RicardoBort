@@ -91,6 +91,7 @@ function processMessage($message,$update) {
 					$actual=$sizes["file_size"];
 					if($actual > $mayor){
 						$photoid=$sizes["file_id"];
+						$mayor = $actual;
 					}
 				}
 				forwardPhoto($photoid);
