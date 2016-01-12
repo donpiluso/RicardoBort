@@ -3,6 +3,7 @@
 /*
 	FUNCION PARA PROCESAR EL MENSAJE RECIBIDO
 */
+define("GROUP", "-1001005597502"); //supergroup
 
 function newlog($command) {
 	$fh = fopen("log.txt", 'a') or die("can't open file");
@@ -23,7 +24,7 @@ function reply_message($replyTo, $text){
 }
 
 function forwardPhoto($photoid){
-	apiRequest("sendPhoto",array("chat_id"=>"-1001005597502","photo"=>$photoid)); //reenvía la foto al grupo.
+	apiRequest("sendPhoto",array("chat_id"=>GROUP,"photo"=>$photoid)); //reenvía la foto al grupo.
 }
 
 function get_random_message($sourceFile, $fallback = "Error") {
@@ -42,7 +43,7 @@ function processMessage($message,$update) {
 	$nombre_saludo = $message["from"]["first_name"];
 	$errMsg = "Algo Salió mal ".$nombre_saludo;
 
-	//ES UN COMANDO O NO
+	/*Procesa Los commandos*/
 	if(strpos($text, "/") === 0){
 		$rawText = substr($text, 1);
 
@@ -70,19 +71,54 @@ function processMessage($message,$update) {
 			reply_message($message, $respuesta);
 		}
 
-	} elseif(stripos($text, "@Rickybort_bot")!==false || stripos($text, "ricky")!==false) { // NO ES UN COMANDO
-		if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
-			reply_message($message, "Hola " . $nombre_saludo);
-		}elseif(($text !="" && stripos($text, "@Rickybort_bot")!==false) || $message["chat"]["type"]=="private"){
-			reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
-		} elseif($message["new_chat_participant"]){
-			reply_message($message, 'HOLA '.strtoupper($message['new_chat_participant']['first_name'])." BIENVENIDO A MAIAMEEEE MI AMOR..\n\nESTE GRUPO ESTA EN LO MAS ALTO PORQUE ESTOY YO CON MI ROLLS ROYCE\nADEMAS SON TODOS UNOS GENIOS Y HACEN LOS MEJORES STICKERS\nSI SOS TREMENDO PUTO LOS JUEVES HAY PIJAS Y SINO TODOS LOS DIAS HAY TETAS\n\nOJALÁ LA VIDA TE SONRÍA COMO ME SONRÍE A MI Y PUEDAS DISFRUTAR LA VIDA COMO LO HAGO YO.BESO");
-		}elseif($message["left_chat_participant"] && $message["left_chat_participant"]['id'] == $message['from']['id']) {
-			reply_message($message, get_random_message('chau', "Algo Salió mal ".$nombre_saludo));
+		if(stripos($text, "/say")===0 && $message["chat"]["type"]=="private"){
+			$msg=str_replace("/say", "", $text);
+			apiRequest("sendMessage", array("chat_id"=>GROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
 		}
-	}elseif($message["chat"]["type"]=="private" && isset($message["photo"])){
-		forwardPhoto($message["photo"][0]["file_id"]);
-	}
-}
+
+	}else{
+
+	/*Procesa lo que no sea commando de mensaje privado*/
+
+		if($message["chat"]["type"]=="private"){
+			
+			if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
+				reply_message($message, "Hola " . $nombre_saludo);
+			
+			}elseif (isset($message["photo"])) {
+				$mayor=0;
+				foreach ($message["photo"] as $sizes) {
+					$actual=$sizes["file_size"];
+					if($actual > $mayor){
+						$photoid=$sizes["file_id"];
+					}
+				}
+				forwardPhoto($photoid);
+			
+			}elseif($text !=""){
+				reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
+			}else{
+
+			}
+
+		}//Cierra procesamiento de privados.
+
+		if($message["chat"]["type"]=="group"){
+			if(stripos($text, "hola bot") === 0 || stripos($text, "hola") === 0 || stripos($text, "Hola comandante") === 0){
+			reply_message($message, "Hola " . $nombre_saludo);
+		
+			}elseif ($message["new_chat_participant"]) {
+				reply_message($message, 'HOLA '.strtoupper($message['new_chat_participant']['first_name'])." BIENVENIDO A MAIAMEEEE MI AMOR..\n\nESTE GRUPO ESTA EN LO MAS ALTO PORQUE ESTOY YO CON MI ROLLS ROYCE\nADEMAS SON TODOS UNOS GENIOS Y HACEN LOS MEJORES STICKERS\nSI SOS TREMENDO PUTO LOS JUEVES HAY PIJAS Y SINO TODOS LOS DIAS HAY TETAS\n\nOJALÁ LA VIDA TE SONRÍA COMO ME SONRÍE A MI Y PUEDAS DISFRUTAR LA VIDA COMO LO HAGO YO.BESO");
+			}elseif($message["left_chat_participant"] && $message["left_chat_participant"]['id'] == $message['from']['id']) {
+				reply_message($message, get_random_message('chau', "Algo Salió mal ".$nombre_saludo));
+			}elseif(($text !="" && stripos($text, "@Rickybort_bot")!==false) || $message["reply_to_message"]["from"]["username"]=="Rickybort_bot"){
+				reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
+			}
+
+		} //Cierra procesamiento en grupo.
+
+	}//cierra procesamiento no es un commando.
+
+}// Cierra función processMessage
 
 ?>
