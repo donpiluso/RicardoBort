@@ -73,8 +73,7 @@ function processMessage($message,$update) {
 
 		if(stripos($text, "/say")===0 && $message["chat"]["type"]=="private"){
 			$msg=str_ireplace("/say", "", $text);
-			$msg=utf8_encode($msg);
-			apiRequest("sendMessage", array("chat_id"=>GROUP,"text"=>strtoupper($msg)));
+			apiRequest("sendMessage", array("chat_id"=>GROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
 		}
 
 	}else{
