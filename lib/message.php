@@ -76,6 +76,9 @@ function processMessage($message,$update) {
 			apiRequest("sendMessage", array("chat_id"=>GROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
 		}
 
+		if(stripos($text, "/id")===0){
+			reply_message($message, $message["chat"]["id"]);
+		}
 	}else{
 
 	/*Procesa lo que no sea commando de mensaje privado*/
