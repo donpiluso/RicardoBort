@@ -23,8 +23,16 @@ function reply_message($replyTo, $text){
 	apiRequest("send".$type, array_merge($array, array('chat_id' => $replyTo['chat']['id'], "reply_to_message_id" =>$replyTo["message_id"])));
 }
 
-function forwardPhoto($photoid){
-	apiRequest("sendPhoto",array("chat_id"=>GROUP,"photo"=>$photoid)); //reenvía la foto al grupo.
+function forwardPhoto($photos, $target){
+	$mayor=0;
+	foreach ($photos as $sizes) {
+		$actual=$sizes["file_size"];
+		if($actual > $mayor){
+			$photoid=$sizes["file_id"];
+			$mayor = $actual;
+		}
+	}
+	apiRequest("sendPhoto",array("chat_id"=>$target, "photo"=>$photoid)); //reenvía la foto al grupo.
 }
 
 function get_random_message($sourceFile, $fallback = "Error") {
@@ -89,16 +97,7 @@ function processMessage($message,$update) {
 				reply_message($message, "Hola " . $nombre_saludo);
 			
 			}elseif (isset($message["photo"])) {
-				$mayor=0;
-				foreach ($message["photo"] as $sizes) {
-					$actual=$sizes["file_size"];
-					if($actual > $mayor){
-						$photoid=$sizes["file_id"];
-						$mayor = $actual;
-					}
-				}
-				forwardPhoto($photoid);
-			
+				forwardPhoto($message["photo"], GROUP);
 			}elseif($text !=""){
 				reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
 			}else{
