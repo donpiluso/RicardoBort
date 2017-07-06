@@ -80,11 +80,11 @@ function processMessage($message,$update) {
 			reply_message($message, $respuesta);
 		}
 
-		if(stripos($text, "/say")===0 && $message["chat"]["type"]=="private"){
+		if(stripos($text, "/say ")===0 && $message["chat"]["type"]=="private"){
 			$msg=str_ireplace("/say", "", $text);
 			apiRequest("sendMessage", array("chat_id"=>SUPERGROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
 		}
-		if(stripos($text, "/say2")===0 && $message["chat"]["type"]=="private"){
+		if(stripos($text, "/say2 ")===0 && $message["chat"]["type"]=="private"){
 			$msg=str_ireplace("/say2", "", $text);
 			apiRequest("sendMessage", array("chat_id"=>GROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
 		}
