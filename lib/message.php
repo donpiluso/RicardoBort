@@ -3,7 +3,8 @@
 /*
 	FUNCION PARA PROCESAR EL MENSAJE RECIBIDO
 */
-define("GROUP", "-1001005597502"); //supergroup
+define("GROUP", "-48196586");
+define("SUPERGROUP", "-1001005597502"); //supergroup
 
 function newlog($command) {
 	$fh = fopen("log.txt", 'a') or die("can't open file");
@@ -81,6 +82,10 @@ function processMessage($message,$update) {
 
 		if(stripos($text, "/say")===0 && $message["chat"]["type"]=="private"){
 			$msg=str_ireplace("/say", "", $text);
+			apiRequest("sendMessage", array("chat_id"=>SUPERGROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
+		}
+		if(stripos($text, "/say2")===0 && $message["chat"]["type"]=="private"){
+			$msg=str_ireplace("/say2", "", $text);
 			apiRequest("sendMessage", array("chat_id"=>GROUP,"text"=>mb_strtoupper($msg,"UTF-8")));
 		}
 
@@ -97,7 +102,7 @@ function processMessage($message,$update) {
 				reply_message($message, "Hola " . $nombre_saludo);
 			
 			}elseif (isset($message["photo"])) {
-				forwardPhoto($message["photo"], GROUP);
+				forwardPhoto($message["photo"], SUPERGROUP);
 			}elseif($text !=""){
 				reply_message($message, get_random_message('respuestas', "Algo Salió mal ".$nombre_saludo));
 			}else{
