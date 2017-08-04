@@ -4,7 +4,7 @@
 	FUNCION PARA PROCESAR EL MENSAJE RECIBIDO
 */
 define("GROUP", "-48196586");
-define("SUPERGROUP", "-1001005597502"); //supergroup
+define("SUPERGROUP", "-221297016"); //supergroup
 
 function newlog($command) {
 	$fh = fopen("log.txt", 'a') or die("can't open file");
